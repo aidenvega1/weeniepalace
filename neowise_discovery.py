@@ -169,8 +169,3 @@ else:
     print("\nNo anomalous candidates found to plot.")
 
 print("\nAnalysis complete!")
-
-
-!float 
-
-angel in a monkey

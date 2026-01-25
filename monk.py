@@ -1,21 +1,44 @@
-PLOT_DIR = os.path.join(OUTPUT_DIR, "lightcurves")
-os.makedirs(PLOT_DIR, exist_ok=True)
+from flask import Flask, request, jsonify
+from astroquery.simbad import Simbad
+from astropy.coordinates import SkyCoord
+import astropy.units as u
 
-print("Generating light curves for candidate objects...")
+app = Flask(__name__)
 
-for _, row in candidates.iterrows():
-    sid = row["source_id"]
-    obj_data = df[df["source_id"] == sid]
+# Customize SIMBAD fields
+Simbad.add_votable_fields(
+    "otype",
+    "flux(V)",
+    "ra(d)",
+    "dec(d)"
+)
 
-    plt.figure(figsize=(6, 4))
-    plt.scatter(obj_data["mjd"], obj_data["w1mpro"], s=12, alpha=0.6)
-    plt.gca().invert_yaxis()
-    plt.xlabel("MJD")
-    plt.ylabel("W1 Magnitude")
-    plt.title(f"Source {sid}")
-    plt.tight_layout()
+@app.route("/query", methods=["GET"])
+def query_object():
+    ra = request.args.get("ra")
+    dec = request.args.get("dec")
 
-    plt.savefig(os.path.join(PLOT_DIR, f"{sid}.png"), dpi=120)
-    plt.close()
+    if not ra or not dec:
+        return jsonify({"error": "RA and DEC required"}), 400
 
-print("All candidate light curves generated.")
+    coord = SkyCoord(float(ra), float(dec), unit="deg")
+
+    result = Simbad.query_region(coord, radius=5 * u.arcmin)
+
+    if result is None:
+        return jsonify({"message": "No objects found"})
+
+    objects = []
+    for row in result:
+        objects.append({
+            "name": row["MAIN_ID"].decode("utf-8"),
+            "type": row["OTYPE"],
+            "ra": float(row["RA_d"]),
+            "dec": float(row["DEC_d"]),
+            "visual_mag": row["FLUX_V"]
+        })
+
+    return jsonify(objects)
+
+if __name__ == "__main__":
+    app.run(debug=True)

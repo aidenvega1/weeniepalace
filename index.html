@@ -5,111 +5,151 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Deep Space Explorer</title>
     <style>
-        body {
+        * {
             margin: 0;
-            font-family: "Segoe UI", Arial, sans-serif;
-            background: radial-gradient(circle at top, #0b3d91, #000);
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #0a0e27 0%, #1a1a2e 50%, #16213e 100%);
             color: #e0e0e0;
             min-height: 100vh;
+            padding: 20px;
         }
+
         header {
             text-align: center;
-            padding: 2rem;
-            background: linear-gradient(180deg, #0b3d91, #061f4a);
-            border-bottom: 2px solid #1f6feb;
+            padding: 40px 20px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 15px;
+            margin-bottom: 30px;
+            backdrop-filter: blur(10px);
         }
-        header h1 {
-            font-size: 2.5rem;
-            letter-spacing: 2px;
-            margin: 0 0 0.5rem 0;
+
+        h1 {
+            font-size: 2.5em;
+            color: #64b5f6;
+            margin-bottom: 10px;
+            text-shadow: 0 0 20px rgba(100, 181, 246, 0.5);
         }
+
         header p {
-            margin: 0;
-            font-size: 1.1rem;
-            opacity: 0.9;
+            color: #b0b0b0;
+            font-size: 1.1em;
         }
+
         .controls {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 30px;
+            border-radius: 15px;
+            margin-bottom: 30px;
             display: flex;
-            justify-content: center;
-            gap: 1rem;
-            padding: 1.5rem;
+            gap: 15px;
             flex-wrap: wrap;
+            justify-content: center;
+            backdrop-filter: blur(10px);
         }
+
         input {
-            padding: 0.6rem;
-            background: #020c1b;
-            border: 1px solid #1f6feb;
-            color: white;
-            border-radius: 4px;
-            font-size: 1rem;
+            padding: 12px 20px;
+            border: 2px solid rgba(100, 181, 246, 0.3);
+            border-radius: 8px;
+            background: rgba(255, 255, 255, 0.1);
+            color: #e0e0e0;
+            font-size: 1em;
+            min-width: 200px;
+            transition: all 0.3s ease;
         }
-        input::placeholder {
-            color: #6c7a89;
-        }
+
         input:focus {
             outline: none;
-            border-color: #388bfd;
+            border-color: #64b5f6;
+            background: rgba(255, 255, 255, 0.15);
         }
+
+        input::placeholder {
+            color: #888;
+        }
+
         button {
-            background: #1f6feb;
-            border: none;
-            padding: 0.7rem 1.2rem;
+            padding: 12px 30px;
+            background: linear-gradient(135deg, #64b5f6 0%, #42a5f5 100%);
             color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 1em;
             font-weight: bold;
             cursor: pointer;
-            border-radius: 4px;
-            font-size: 1rem;
-            transition: background 0.3s ease;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(100, 181, 246, 0.3);
         }
+
         button:hover {
-            background: #388bfd;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(100, 181, 246, 0.5);
         }
+
+        button:active {
+            transform: translateY(0);
+        }
+
         #results {
-            max-width: 900px;
-            margin: auto;
-            padding: 1rem;
+            background: rgba(255, 255, 255, 0.05);
+            padding: 30px;
+            border-radius: 15px;
             min-height: 200px;
+            backdrop-filter: blur(10px);
         }
-        .card {
-            background: #020c1b;
-            border-left: 4px solid #1f6feb;
-            padding: 1rem;
-            margin-bottom: 1rem;
-            border-radius: 4px;
-        }
-        .card h3 {
-            margin: 0 0 0.5rem 0;
-            color: #1f6feb;
-        }
-        .card p {
-            margin: 0.3rem 0;
-            line-height: 1.6;
-        }
+
         .loading {
             text-align: center;
-            color: #1f6feb;
-            font-size: 1.2rem;
-            padding: 2rem;
+            color: #64b5f6;
+            font-size: 1.2em;
         }
+
         .error {
             color: #ff6b6b;
             text-align: center;
-            padding: 1rem;
-            background: #2a0f0f;
-            border: 1px solid #ff6b6b;
-            border-radius: 4px;
+            padding: 20px;
         }
+
+        .object-card {
+            background: rgba(255, 255, 255, 0.08);
+            padding: 20px;
+            margin-bottom: 15px;
+            border-radius: 10px;
+            border-left: 4px solid #64b5f6;
+            transition: all 0.3s ease;
+        }
+
+        .object-card:hover {
+            background: rgba(255, 255, 255, 0.12);
+            transform: translateX(5px);
+        }
+
+        .object-card h3 {
+            color: #64b5f6;
+            margin-bottom: 10px;
+        }
+
+        .object-card p {
+            color: #c0c0c0;
+            margin: 5px 0;
+        }
+
         .no-results {
             text-align: center;
-            color: #6c7a89;
-            padding: 2rem;
-            font-size: 1.1rem;
+            color: #888;
+            padding: 40px;
+            font-size: 1.1em;
         }
     </style>
 </head>
 <body>
 <header>
-    <h1>Deep Space Explorer</h1>
+    <h1>🌌 Deep Space Explorer</h1>
     <p>Exploring the universe using NASA public data</p>
 </header>
 <section class="controls">
@@ -135,7 +175,10 @@
         resultsDiv.innerHTML = '<div class="loading">🔭 Searching the cosmos...</div>';
 
         try {
-            // Attempt to query SIMBAD astronomical database
+            // Using NASA's SkyView service to get information about the region
+            const response = await fetch(`https://skyview.gsfc.nasa.gov/current/cgi/pskcall?position=${ra},${dec}&survey=DSS&pixels=300`);
+            
+            // Also query SIMBAD (astronomical database) for objects in the region
             const simbadUrl = `https://simbad.u-strasbg.fr/simbad/sim-coo?Coord=${ra}+${dec}&Radius=10&Radius.unit=arcmin&output.format=JSON`;
             
             const simbadResponse = await fetch(simbadUrl);
@@ -144,6 +187,7 @@
                 const data = await simbadResponse.json();
                 displayResults(data, ra, dec);
             } else {
+                // Fallback to simulated data if SIMBAD is unavailable
                 displaySimulatedResults(ra, dec);
             }
         } catch (error) {
@@ -156,11 +200,11 @@
         const resultsDiv = document.getElementById('results');
         
         if (data && data.data && data.data.length > 0) {
-            let html = `<h2 style="color: #1f6feb; margin-bottom: 1rem;">Objects found near RA: ${ra}°, Dec: ${dec}°</h2>`;
+            let html = `<h2 style="color: #64b5f6; margin-bottom: 20px;">Objects found near RA: ${ra}°, Dec: ${dec}°</h2>`;
             
             data.data.forEach((obj, index) => {
                 html += `
-                    <div class="card">
+                    <div class="object-card">
                         <h3>Object ${index + 1}: ${obj.main_id || 'Unknown'}</h3>
                         <p><strong>Type:</strong> ${obj.otype || 'Unknown type'}</p>
                         <p><strong>Coordinates:</strong> RA ${obj.ra || 'N/A'}, Dec ${obj.dec || 'N/A'}</p>
@@ -178,10 +222,11 @@
     function displaySimulatedResults(ra, dec) {
         const resultsDiv = document.getElementById('results');
         
+        // Generate simulated celestial objects based on coordinates
         const objectTypes = ['Star', 'Galaxy', 'Nebula', 'Star Cluster', 'Quasar'];
         const numObjects = Math.floor(Math.random() * 5) + 1;
         
-        let html = `<h2 style="color: #1f6feb; margin-bottom: 1rem;">Sky Region: RA ${ra}°, Dec ${dec}°</h2>`;
+        let html = `<h2 style="color: #64b5f6; margin-bottom: 20px;">Sky Region: RA ${ra}°, Dec ${dec}°</h2>`;
         
         if (numObjects > 0) {
             for (let i = 0; i < numObjects; i++) {
@@ -191,7 +236,7 @@
                 const magnitude = (Math.random() * 15 + 5).toFixed(1);
                 
                 html += `
-                    <div class="card">
+                    <div class="object-card">
                         <h3>${type} Object ${i + 1}</h3>
                         <p><strong>Type:</strong> ${type}</p>
                         <p><strong>Coordinates:</strong> RA ${(parseFloat(ra) + parseFloat(offsetRA)).toFixed(3)}°, Dec ${(parseFloat(dec) + parseFloat(offsetDec)).toFixed(3)}°</p>
